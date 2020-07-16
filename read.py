@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from guild_memebers import CharacterList
 
-date = ['2020-07-03', '2020-07-04']
+date = ['2020-07-10', '2020-07-11']
 chl = CharacterList()
 
 
@@ -26,11 +26,11 @@ class Player:
             file.write(exp_raw)
 
     @staticmethod
-    def _get_experience(name):
+    def _exp_by_day(name):
         """Obtaining experience value and saving it into dictionary:
         keys - day
         value - experience value"""
-        daily_exp = dict()
+        daily_exp = {}
         with open('{}_raw'.format(name), 'r') as file_raw:
             for line in file_raw:
                 for i in date:
@@ -41,13 +41,26 @@ class Player:
         return daily_exp
 
     @staticmethod
+    def _get_experience(name):
+        """Calculate total experience"""
+        total = 0
+        with open('{}_raw'.format(name), 'r') as file_raw:
+            for line in file_raw:
+                for i in date:
+                    if line.startswith(i):
+                        exp = next(file_raw, '')
+                        exp = re.sub('[,+]', '', exp)
+                        total += int(exp)
+        return total
+
+    @staticmethod
     def _get_level(name):
         """Obtaining player level"""
         with open('{}_raw'.format(name), 'r') as file_raw:
             for line in file_raw:
                 if line.startswith('Level:'):
                     level = next(file_raw, '')
-                    return level.split(' ')[0]
+                    return int(level.split(' ')[0])
 
     @staticmethod
     def _get_vocation(name):
@@ -79,9 +92,8 @@ class Player:
         player = dict()
         for name in chl.name_list(guild):
             # self._scrap(name)
-            player[name] = [self._get_level(name), self._get_vocation(name), sorted(self._get_experience(name).items())]
-        for keys, values in sorted(player.items()):
-            print(keys, values)
+            player[name] = [self._get_level(name), self._get_vocation(name), sorted(self._exp_by_day(name).items())]
+        return player
 
 
 pl = Player()
