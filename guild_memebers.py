@@ -22,5 +22,4 @@ class CharacterList:
 
 chl = CharacterList()
 chl.name_list('Hill')
-# print(chl.name_list('Hill'))
 
