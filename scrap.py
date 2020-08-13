@@ -30,7 +30,7 @@ class Scraper:
         for script in soup(['script', 'style']):
             script.extract()
         exp_raw = soup.get_text()
-        with open(os.path.join(r'D:/Exp Tibia/{}/{}_raw'.format(guild, name)), 'w') as file:
+        with open(os.path.join(r'{}/{}_raw'.format(guild, name)), 'w') as file:
             file.write(exp_raw)
 
     def scraper(self, guild):
@@ -40,4 +40,4 @@ class Scraper:
 
 
 scr = Scraper()
-scr.scraper('Sleepers')
+scr.scraper('Hill')
